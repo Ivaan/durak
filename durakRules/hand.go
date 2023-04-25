@@ -14,6 +14,7 @@ const (
 	Clubs
 	Diamonds
 	Spades
+	Trump = Spades
 )
 
 func (s Suit) String() string {
@@ -110,7 +111,7 @@ func (h Hand) GetCards() []Card {
 }
 
 func (h Hand) HasCards(h2 Hand) bool {
-	return (h * h2) == h2
+	return (h & h2) == h2
 }
 
 func (h Hand) HasRanks(h2 Hand) bool {

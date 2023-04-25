@@ -13,7 +13,8 @@ const (
 
 type AttackError struct {
 	ErrorType AttackErrorType
-	*Hand
+	*PlayState
+	Play *Hand
 }
 
 func (e *AttackError) Error() string {
@@ -21,11 +22,11 @@ func (e *AttackError) Error() string {
 	case IncorrectTurnForAttack:
 		return fmt.Sprintf("Incorrect turn for attack")
 	case NotExactlyOneAttackCard:
-		return fmt.Sprintf("Must attack with exacty one card, attacked with %s.", e.Hand)
+		return fmt.Sprintf("Must attack with exacty one card, attacked with %s.", e.Play.GetCards())
 	case HandANotHoldingCard:
-		return fmt.Sprintf("Hand A is not holding the card %s.", e.Hand)
+		return fmt.Sprintf("Hand A is not holding the card %s.", e.Play.GetCards())
 	case CardNotOnTable:
-		return fmt.Sprintf("Rank of card %s is not already on the table.")
+		return fmt.Sprintf("Rank of card %s is not already on the table: %s.", e.Play.GetCards(), e.PlayState)
 	default:
 		return fmt.Sprintf("Unrecognized error %d", int(e.ErrorType))
 	}
@@ -35,13 +36,15 @@ type DefendErrorType int
 
 const (
 	IncorrectTurnForDefend DefendErrorType = iota
+	NotExactlyOneDefedCard
 	HandBNotHoldingCard
 	NotAllCardsBeaten
 )
 
 type DefendError struct {
 	ErrorType DefendErrorType
-	*Hand
+	*PlayState
+	Play *Hand
 }
 
 func (e *DefendError) Error() string {
@@ -50,7 +53,7 @@ func (e *DefendError) Error() string {
 	case IncorrectTurnForDefend:
 		return fmt.Sprintf("Incorrect turn for defend")
 	case HandBNotHoldingCard:
-		return fmt.Sprintf("Hand B is not holding the card %s", e.Hand)
+		return fmt.Sprintf("Hand B is not holding the card %s", e.Play.GetCards())
 	case NotAllCardsBeaten:
 		return fmt.Sprintf("Not all attack cards beaten")
 	default:
@@ -66,6 +69,8 @@ const (
 
 type PullError struct {
 	ErrorType PullErrorType
+	*PlayState
+	Play *Hand
 }
 
 func (e *PullError) Error() string {
@@ -85,6 +90,8 @@ const (
 
 type YieldError struct {
 	ErrorType YieldErrorType
+	*PlayState
+	Play *Hand
 }
 
 func (e *YieldError) Error() string {
