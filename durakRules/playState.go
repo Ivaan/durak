@@ -92,6 +92,8 @@ func (ps PlayState) Pull() (PlayState, DrawDirective, *PullError) {
 		return ps, dd, &PullError{ErrorType: IncorrectTurnForPull, PlayState: &ps}
 	}
 	ps.HandB = ps.HandB.Combine(ps.AttackCards.Combine(ps.DefendCards))
+	ps.AttackCards = Hand(0)
+	ps.DefendCards = Hand(0)
 
 	dd.NumberOfCardsToDrawIntoHandA = computeDraw(ps.HandA.CardCount())
 	dd.NumberOfCardsToDrawIntoHandB = computeDraw(ps.HandB.CardCount())
@@ -101,8 +103,8 @@ func (ps PlayState) Pull() (PlayState, DrawDirective, *PullError) {
 
 func (ps PlayState) Yield() (PlayState, DrawDirective, *YieldError) {
 	dd := DrawDirective{}
-
-	if ps.AttackCards.CardCount() != ps.DefendCards.CardCount() {
+	attackCardCount := ps.AttackCards.CardCount()
+	if attackCardCount == 0 || attackCardCount != ps.DefendCards.CardCount() {
 		return ps, dd, &YieldError{ErrorType: IncorrectTurnForYield, PlayState: &ps}
 	}
 	ps.Discarded = ps.Discarded.Combine(ps.AttackCards.Combine(ps.DefendCards))

@@ -52,6 +52,8 @@ func (e *DefendError) Error() string {
 
 	case IncorrectTurnForDefend:
 		return fmt.Sprintf("Incorrect turn for defend")
+	case NotExactlyOneDefedCard:
+		return fmt.Sprintf("Not Exactly One Defend Card")
 	case HandBNotHoldingCard:
 		return fmt.Sprintf("Hand B is not holding the card %s", e.Play.GetCards())
 	case NotAllCardsBeaten:
